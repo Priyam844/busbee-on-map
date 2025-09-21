@@ -20,7 +20,7 @@ const Header = () => {
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Search routes, stops, or destinations..."
+                placeholder="Search DTC routes, stops, or destinations..."
                 className="pl-10 bg-background/50"
               />
             </div>

@@ -15,38 +15,50 @@ interface Route {
 
 const mockRoutes: Route[] = [
   {
-    id: '42',
-    name: 'Route 42',
+    id: '764',
+    name: 'DTC 764',
     color: 'bus-route-1',
-    direction: 'Downtown ↔ Uptown',
-    activeBuses: 3,
-    nextArrivals: [
-      { stop: 'Central Station', time: 2 },
-      { stop: 'Broadway Plaza', time: 8 },
-      { stop: 'Metro Hub', time: 12, delayed: true },
-    ],
-  },
-  {
-    id: '15',
-    name: 'Route 15',
-    color: 'bus-route-2',
-    direction: 'East ↔ West',
-    activeBuses: 2,
-    nextArrivals: [
-      { stop: 'Park Avenue', time: 5 },
-      { stop: 'Central Station', time: 15 },
-    ],
-  },
-  {
-    id: '8',
-    name: 'Route 8',
-    color: 'bus-route-3',
-    direction: 'Crosstown Express',
+    direction: 'CP ↔ Dwarka',
     activeBuses: 4,
     nextArrivals: [
-      { stop: 'Metro Hub', time: 1 },
-      { stop: 'Broadway Plaza', time: 6 },
-      { stop: 'Park Avenue', time: 11, delayed: true },
+      { stop: 'Connaught Place', time: 3 },
+      { stop: 'Khan Market', time: 12 },
+      { stop: 'Dwarka Sector 21', time: 25, delayed: true },
+    ],
+  },
+  {
+    id: '420',
+    name: 'DTC 420',
+    color: 'bus-route-2',
+    direction: 'ISBT ↔ Gurgaon',
+    activeBuses: 3,
+    nextArrivals: [
+      { stop: 'Rajiv Chowk Metro', time: 2 },
+      { stop: 'ISBT Kashmere Gate', time: 18 },
+    ],
+  },
+  {
+    id: '715',
+    name: 'DTC 715',
+    color: 'bus-route-3',
+    direction: 'Khan Market ↔ Lajpat',
+    activeBuses: 2,
+    nextArrivals: [
+      { stop: 'India Gate', time: 7 },
+      { stop: 'Khan Market', time: 15 },
+      { stop: 'Lajpat Nagar', time: 20, delayed: true },
+    ],
+  },
+  {
+    id: '543',
+    name: 'DTC 543',
+    color: 'bus-route-4',
+    direction: 'Old Delhi ↔ New Delhi',
+    activeBuses: 5,
+    nextArrivals: [
+      { stop: 'Red Fort', time: 1 },
+      { stop: 'ISBT Kashmere Gate', time: 8 },
+      { stop: 'India Gate', time: 16 },
     ],
   },
 ];
@@ -60,7 +72,7 @@ const RoutePanel = () => {
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
             <Bus className="w-5 h-5 text-primary" />
-            Active Routes
+            DTC Routes - Delhi
           </h2>
         </div>
         
@@ -125,7 +137,7 @@ const RoutePanel = () => {
 
         <div className="p-4 border-t">
           <Button className="w-full bg-gradient-primary hover:bg-primary-hover" size="sm">
-            View All Routes
+            View All DTC Routes
           </Button>
         </div>
       </Card>

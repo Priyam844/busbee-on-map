@@ -31,42 +31,55 @@ interface BusStop {
   routes: string[];
 }
 
-// Mock data
+// Mock data for Delhi, India
 const mockBuses: Bus[] = [
   {
     id: '1',
-    route: 'Route 42',
-    lat: 40.7589,
-    lng: -73.9851,
-    direction: 'Downtown',
-    nextStop: 'Central Station',
-    delay: 2,
+    route: 'DTC 764',
+    lat: 28.6139,
+    lng: 77.2090,
+    direction: 'CP to Dwarka',
+    nextStop: 'Connaught Place',
+    delay: 3,
   },
   {
     id: '2',
-    route: 'Route 15',
-    lat: 40.7614,
-    lng: -73.9776,
-    direction: 'Uptown',
-    nextStop: 'Broadway Plaza',
+    route: 'DTC 420',
+    lat: 28.6280,
+    lng: 77.2190,
+    direction: 'ISBT to Gurgaon',
+    nextStop: 'Rajiv Chowk',
     delay: 0,
   },
   {
     id: '3',
-    route: 'Route 8',
-    lat: 40.7505,
-    lng: -73.9934,
-    direction: 'Crosstown',
-    nextStop: 'Park Avenue',
+    route: 'DTC 715',
+    lat: 28.6020,
+    lng: 77.2300,
+    direction: 'Khan Market to Lajpat Nagar',
+    nextStop: 'India Gate',
     delay: 5,
+  },
+  {
+    id: '4',
+    route: 'DTC 543',
+    lat: 28.6350,
+    lng: 77.2240,
+    direction: 'Old Delhi to New Delhi',
+    nextStop: 'Red Fort',
+    delay: 1,
   },
 ];
 
 const mockBusStops: BusStop[] = [
-  { id: '1', name: 'Central Station', lat: 40.7580, lng: -73.9855, routes: ['42', '15'] },
-  { id: '2', name: 'Broadway Plaza', lat: 40.7620, lng: -73.9780, routes: ['15', '8'] },
-  { id: '3', name: 'Park Avenue', lat: 40.7510, lng: -73.9940, routes: ['8', '42'] },
-  { id: '4', name: 'Metro Hub', lat: 40.7550, lng: -73.9800, routes: ['15', '42', '8'] },
+  { id: '1', name: 'Connaught Place', lat: 28.6315, lng: 77.2167, routes: ['764', '420'] },
+  { id: '2', name: 'Rajiv Chowk Metro', lat: 28.6330, lng: 77.2194, routes: ['420', '715'] },
+  { id: '3', name: 'India Gate', lat: 28.6129, lng: 77.2295, routes: ['715', '543'] },
+  { id: '4', name: 'Red Fort', lat: 28.6562, lng: 77.2410, routes: ['543', '764'] },
+  { id: '5', name: 'ISBT Kashmere Gate', lat: 28.6677, lng: 77.2273, routes: ['420', '543'] },
+  { id: '6', name: 'Khan Market', lat: 28.5984, lng: 77.2319, routes: ['715', '764'] },
+  { id: '7', name: 'Lajpat Nagar', lat: 28.5657, lng: 77.2431, routes: ['715'] },
+  { id: '8', name: 'Dwarka Sector 21', lat: 28.5520, lng: 77.0522, routes: ['764'] },
 ];
 
 const SimpleMap = () => {
@@ -77,8 +90,8 @@ const SimpleMap = () => {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
-    // Initialize map
-    const map = L.map(mapRef.current).setView([40.7589, -73.9851], 13);
+    // Initialize map centered on Delhi, India
+    const map = L.map(mapRef.current).setView([28.6139, 77.2090], 12);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -87,10 +100,10 @@ const SimpleMap = () => {
 
     mapInstanceRef.current = map;
 
-    // Custom bus icon
+    // Custom bus icon with Indian styling
     const busIcon = L.divIcon({
       className: 'custom-bus-marker',
-      html: `<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-lg">
+      html: `<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
         🚌
       </div>`,
       iconSize: [32, 32],
@@ -116,7 +129,7 @@ const SimpleMap = () => {
               <div class="w-4 h-4 text-primary">🚏</div>
             </div>
             <p class="font-semibold text-foreground">${stop.name}</p>
-            <p class="text-sm text-muted-foreground">Routes: ${stop.routes.join(', ')}</p>
+            <p class="text-sm text-muted-foreground">DTC Routes: ${stop.routes.join(', ')}</p>
           </div>
         `)
         .addTo(map);
@@ -246,7 +259,7 @@ const SimpleMap = () => {
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center text-xs">🚌</div>
-            <span className="text-card-foreground">Active Bus</span>
+            <span className="text-card-foreground">DTC Bus</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-secondary rounded-full border border-white"></div>
