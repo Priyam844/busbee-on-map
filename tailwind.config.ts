@@ -22,6 +22,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -39,6 +40,10 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -47,6 +52,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // BusBee specific colors
+        'bus-route': {
+          1: "hsl(var(--bus-route-1))",
+          2: "hsl(var(--bus-route-2))",
+          3: "hsl(var(--bus-route-3))",
+          4: "hsl(var(--bus-route-4))",
+        },
+        'location-pulse': "hsl(var(--location-pulse))",
+        'map-overlay': "hsl(var(--map-overlay))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,10 +94,38 @@ export default {
             height: "0",
           },
         },
+        "pulse-location": {
+          "0%, 100%": {
+            opacity: "1",
+            transform: "scale(1)",
+          },
+          "50%": {
+            opacity: "0.7",
+            transform: "scale(1.1)",
+          },
+        },
+        "bus-move": {
+          "0%": {
+            transform: "translateX(-2px)",
+          },
+          "50%": {
+            transform: "translateX(2px)",
+          },
+          "100%": {
+            transform: "translateX(-2px)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-location": "pulse-location 2s ease-in-out infinite",
+        "bus-move": "bus-move 3s ease-in-out infinite",
+      },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-location': 'var(--gradient-location)',
+        'gradient-map-overlay': 'var(--gradient-map-overlay)',
       },
     },
   },
