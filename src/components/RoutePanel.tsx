@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Bus, Clock, MapPin, ChevronRight } from 'lucide-react';
+import { Bus, Clock, MapPin, ChevronRight, Search } from 'lucide-react';
+import { useSearch } from '@/contexts/SearchContext';
 
 interface Route {
   id: string;
@@ -65,6 +66,21 @@ const mockRoutes: Route[] = [
 
 const RoutePanel = () => {
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+  const { searchQuery } = useSearch();
+
+  const filteredRoutes = useMemo(() => {
+    if (!searchQuery.trim()) return mockRoutes;
+    
+    const query = searchQuery.toLowerCase().trim();
+    return mockRoutes.filter(route => 
+      route.id.toLowerCase().includes(query) ||
+      route.name.toLowerCase().includes(query) ||
+      route.direction.toLowerCase().includes(query) ||
+      route.nextArrivals.some(arrival => 
+        arrival.stop.toLowerCase().includes(query)
+      )
+    );
+  }, [searchQuery]);
 
   return (
     <div className="absolute left-4 top-20 z-[1000] w-80 max-h-[calc(100vh-6rem)] overflow-y-auto">
@@ -74,10 +90,23 @@ const RoutePanel = () => {
             <Bus className="w-5 h-5 text-primary" />
             DTC Routes - Delhi
           </h2>
+          {searchQuery && (
+            <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+              <Search className="w-4 h-4" />
+              <span>{filteredRoutes.length} routes found for "{searchQuery}"</span>
+            </div>
+          )}
         </div>
         
         <div className="p-2 space-y-2">
-          {mockRoutes.map((route) => (
+          {filteredRoutes.length === 0 && searchQuery ? (
+            <div className="p-4 text-center text-muted-foreground">
+              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">No routes found for "{searchQuery}"</p>
+              <p className="text-xs">Try searching by bus number (764, 420) or destination</p>
+            </div>
+          ) : (
+            filteredRoutes.map((route) => (
             <Card
               key={route.id}
               className={`p-3 cursor-pointer transition-all hover:shadow-md ${
@@ -132,7 +161,8 @@ const RoutePanel = () => {
                 </div>
               )}
             </Card>
-          ))}
+            ))
+          )}
         </div>
 
         <div className="p-4 border-t">

@@ -1,8 +1,10 @@
 import { Bus, Menu, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useSearch } from '@/contexts/SearchContext';
 
 const Header = () => {
+  const { searchQuery, setSearchQuery } = useSearch();
   return (
     <header className="absolute top-0 left-0 right-0 z-[1000] bg-card/95 backdrop-blur-sm border-b shadow-sm">
       <div className="container mx-auto px-4 py-3">
@@ -22,6 +24,8 @@ const Header = () => {
               <Input
                 placeholder="Search DTC routes, stops, or destinations..."
                 className="pl-10 bg-background/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
