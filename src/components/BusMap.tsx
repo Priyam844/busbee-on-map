@@ -114,6 +114,82 @@ function LocationTracker({ onLocationFound }: { onLocationFound: (lat: number, l
   return null;
 }
 
+// Separate component for user location markers
+function UserLocationMarkers({ userLocation }: { userLocation: [number, number] | null }) {
+  if (!userLocation) return null;
+  
+  return (
+    <>
+      <Marker position={userLocation} icon={locationIcon}>
+        <Popup>
+          <div className="text-center">
+            <MapPin className="w-4 h-4 mx-auto mb-1 text-accent" />
+            <p className="font-semibold">Your Location</p>
+          </div>
+        </Popup>
+      </Marker>
+      <Circle
+        center={userLocation}
+        radius={100}
+        pathOptions={{
+          color: 'hsl(var(--location-pulse))',
+          weight: 2,
+          fillColor: 'hsl(var(--location-pulse))',
+          fillOpacity: 0.1,
+        }}
+      />
+    </>
+  );
+}
+
+// Separate component for bus stop markers
+function BusStopMarkers() {
+  return (
+    <>
+      {mockBusStops.map((stop) => (
+        <Marker key={stop.id} position={[stop.lat, stop.lng]} icon={busStopIcon}>
+          <Popup>
+            <div className="text-center min-w-[150px]">
+              <Bus className="w-4 h-4 mx-auto mb-1 text-primary" />
+              <p className="font-semibold">{stop.name}</p>
+              <p className="text-sm text-muted-foreground">
+                Routes: {stop.routes.join(', ')}
+              </p>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+}
+
+// Separate component for bus markers
+function BusMarkers({ buses }: { buses: Bus[] }) {
+  return (
+    <>
+      {buses.map((bus) => (
+        <Marker key={bus.id} position={[bus.lat, bus.lng]} icon={busIcon}>
+          <Popup>
+            <div className="text-center min-w-[180px]">
+              <Bus className="w-5 h-5 mx-auto mb-2 text-primary" />
+              <p className="font-bold text-primary">{bus.route}</p>
+              <p className="text-sm">{bus.direction}</p>
+              <p className="text-sm text-muted-foreground">
+                Next: {bus.nextStop}
+              </p>
+              {bus.delay > 0 && (
+                <p className="text-sm text-warning-foreground bg-warning rounded px-2 py-1 mt-1">
+                  Delayed {bus.delay} min
+                </p>
+              )}
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+}
+
 const BusMap = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [buses, setBuses] = useState<Bus[]>(mockBuses);
@@ -171,70 +247,12 @@ const BusMap = () => {
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
         <LocationTracker 
           onLocationFound={(lat, lng) => setUserLocation([lat, lng])}
         />
-
-        {/* User location */}
-        {userLocation && (
-          <>
-            <Marker position={userLocation} icon={locationIcon}>
-              <Popup>
-                <div className="text-center">
-                  <MapPin className="w-4 h-4 mx-auto mb-1 text-accent" />
-                  <p className="font-semibold">Your Location</p>
-                </div>
-              </Popup>
-            </Marker>
-            <Circle
-              center={userLocation}
-              radius={100}
-              pathOptions={{
-                color: 'hsl(var(--location-pulse))',
-                weight: 2,
-                fillColor: 'hsl(var(--location-pulse))',
-                fillOpacity: 0.1,
-              }}
-            />
-          </>
-        )}
-
-        {/* Bus stops */}
-        {mockBusStops.map((stop) => (
-          <Marker key={stop.id} position={[stop.lat, stop.lng]} icon={busStopIcon}>
-            <Popup>
-              <div className="text-center min-w-[150px]">
-                <Bus className="w-4 h-4 mx-auto mb-1 text-primary" />
-                <p className="font-semibold">{stop.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  Routes: {stop.routes.join(', ')}
-                </p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-
-        {/* Buses */}
-        {buses.map((bus) => (
-          <Marker key={bus.id} position={[bus.lat, bus.lng]} icon={busIcon}>
-            <Popup>
-              <div className="text-center min-w-[180px]">
-                <Bus className="w-5 h-5 mx-auto mb-2 text-primary" />
-                <p className="font-bold text-primary">{bus.route}</p>
-                <p className="text-sm">{bus.direction}</p>
-                <p className="text-sm text-muted-foreground">
-                  Next: {bus.nextStop}
-                </p>
-                {bus.delay > 0 && (
-                  <p className="text-sm text-warning-foreground bg-warning rounded px-2 py-1 mt-1">
-                    Delayed {bus.delay} min
-                  </p>
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        <UserLocationMarkers userLocation={userLocation} />
+        <BusStopMarkers />
+        <BusMarkers buses={buses} />
       </MapContainer>
 
       {/* Location button */}
