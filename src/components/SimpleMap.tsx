@@ -90,8 +90,15 @@ const SimpleMap = () => {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
-    // Initialize map centered on Delhi, India
-    const map = L.map(mapRef.current).setView([28.6139, 77.2090], 12);
+    // Initialize map centered on Delhi, India with zoom controls on the right
+    const map = L.map(mapRef.current, {
+      zoomControl: false // Disable default zoom control
+    }).setView([28.6139, 77.2090], 12);
+
+    // Add zoom control to the top right
+    L.control.zoom({
+      position: 'topright'
+    }).addTo(map);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
