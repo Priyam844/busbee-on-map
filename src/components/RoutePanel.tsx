@@ -229,7 +229,7 @@ const RoutePanel = () => {
                           variant="outline" 
                           className={`text-xs px-2 py-0.5 ${getOccupancyColor(arrival.occupancy)}`}
                         >
-                          {arrival.occupancy.passengers}/{arrival.occupancy.capacity} ({arrival.occupancy.percentage}%)
+                          {`${arrival.occupancy.passengers}/${arrival.occupancy.capacity} (${arrival.occupancy.percentage}%)`}
                         </Badge>
                       </div>
                     </div>
