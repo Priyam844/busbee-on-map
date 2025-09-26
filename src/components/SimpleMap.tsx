@@ -249,6 +249,13 @@ const SimpleMap = () => {
   return (
     <div className="relative w-full h-screen">
       <div ref={mapRef} className="w-full h-full" />
+      
+      {/* Custom styling for zoom controls */}
+      <style>{`
+        .leaflet-top.leaflet-right {
+          top: 60px !important;
+        }
+      `}</style>
 
       {/* Location button */}
       <Button
