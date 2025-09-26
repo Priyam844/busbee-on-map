@@ -15,7 +15,12 @@ interface Route {
     stop: string; 
     time: number; 
     delayed?: boolean; 
-    occupancy: 'Low' | 'Medium' | 'High' | 'Full';
+    occupancy: {
+      level: 'Low' | 'Medium' | 'High' | 'Full';
+      percentage: number;
+      passengers: number;
+      capacity: number;
+    };
   }[];
 }
 
@@ -27,9 +32,22 @@ const mockRoutes: Route[] = [
     direction: 'CP ↔ Dwarka',
     activeBuses: 4,
     nextArrivals: [
-      { stop: 'Connaught Place', time: 3, occupancy: 'Medium' },
-      { stop: 'Khan Market', time: 12, occupancy: 'Low' },
-      { stop: 'Dwarka Sector 21', time: 25, delayed: true, occupancy: 'High' },
+      { 
+        stop: 'Connaught Place', 
+        time: 3, 
+        occupancy: { level: 'Medium', percentage: 65, passengers: 32, capacity: 50 }
+      },
+      { 
+        stop: 'Khan Market', 
+        time: 12, 
+        occupancy: { level: 'Low', percentage: 25, passengers: 12, capacity: 50 }
+      },
+      { 
+        stop: 'Dwarka Sector 21', 
+        time: 25, 
+        delayed: true, 
+        occupancy: { level: 'High', percentage: 85, passengers: 42, capacity: 50 }
+      },
     ],
   },
   {
@@ -39,8 +57,16 @@ const mockRoutes: Route[] = [
     direction: 'ISBT ↔ Gurgaon',
     activeBuses: 3,
     nextArrivals: [
-      { stop: 'Rajiv Chowk Metro', time: 2, occupancy: 'Full' },
-      { stop: 'ISBT Kashmere Gate', time: 18, occupancy: 'Medium' },
+      { 
+        stop: 'Rajiv Chowk Metro', 
+        time: 2, 
+        occupancy: { level: 'Full', percentage: 100, passengers: 60, capacity: 60 }
+      },
+      { 
+        stop: 'ISBT Kashmere Gate', 
+        time: 18, 
+        occupancy: { level: 'Medium', percentage: 55, passengers: 33, capacity: 60 }
+      },
     ],
   },
   {
@@ -50,9 +76,22 @@ const mockRoutes: Route[] = [
     direction: 'Khan Market ↔ Lajpat',
     activeBuses: 2,
     nextArrivals: [
-      { stop: 'India Gate', time: 7, occupancy: 'Low' },
-      { stop: 'Khan Market', time: 15, occupancy: 'Medium' },
-      { stop: 'Lajpat Nagar', time: 20, delayed: true, occupancy: 'High' },
+      { 
+        stop: 'India Gate', 
+        time: 7, 
+        occupancy: { level: 'Low', percentage: 30, passengers: 15, capacity: 50 }
+      },
+      { 
+        stop: 'Khan Market', 
+        time: 15, 
+        occupancy: { level: 'Medium', percentage: 70, passengers: 35, capacity: 50 }
+      },
+      { 
+        stop: 'Lajpat Nagar', 
+        time: 20, 
+        delayed: true, 
+        occupancy: { level: 'High', percentage: 90, passengers: 45, capacity: 50 }
+      },
     ],
   },
   {
@@ -62,9 +101,21 @@ const mockRoutes: Route[] = [
     direction: 'Old Delhi ↔ New Delhi',
     activeBuses: 5,
     nextArrivals: [
-      { stop: 'Red Fort', time: 1, occupancy: 'Medium' },
-      { stop: 'ISBT Kashmere Gate', time: 8, occupancy: 'Low' },
-      { stop: 'India Gate', time: 16, occupancy: 'Full' },
+      { 
+        stop: 'Red Fort', 
+        time: 1, 
+        occupancy: { level: 'Medium', percentage: 60, passengers: 30, capacity: 50 }
+      },
+      { 
+        stop: 'ISBT Kashmere Gate', 
+        time: 8, 
+        occupancy: { level: 'Low', percentage: 20, passengers: 10, capacity: 50 }
+      },
+      { 
+        stop: 'India Gate', 
+        time: 16, 
+        occupancy: { level: 'Full', percentage: 100, passengers: 50, capacity: 50 }
+      },
     ],
   },
 ];
@@ -73,8 +124,8 @@ const RoutePanel = () => {
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const { searchQuery } = useSearch();
 
-  const getOccupancyColor = (occupancy: string) => {
-    switch (occupancy) {
+  const getOccupancyColor = (occupancy: { level: string; percentage: number; passengers: number; capacity: number }) => {
+    switch (occupancy.level) {
       case 'Low': return 'text-green-600 bg-green-100 border-green-200';
       case 'Medium': return 'text-yellow-600 bg-yellow-100 border-yellow-200';
       case 'High': return 'text-orange-600 bg-orange-100 border-orange-200';
@@ -178,7 +229,7 @@ const RoutePanel = () => {
                           variant="outline" 
                           className={`text-xs px-2 py-0.5 ${getOccupancyColor(arrival.occupancy)}`}
                         >
-                          {arrival.occupancy} occupancy
+                          {arrival.occupancy.passengers}/{arrival.occupancy.capacity} ({arrival.occupancy.percentage}%)
                         </Badge>
                       </div>
                     </div>
