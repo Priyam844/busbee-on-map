@@ -11,7 +11,12 @@ interface Route {
   color: string;
   direction: string;
   activeBuses: number;
-  nextArrivals: { stop: string; time: number; delayed?: boolean }[];
+  nextArrivals: { 
+    stop: string; 
+    time: number; 
+    delayed?: boolean; 
+    occupancy: 'Low' | 'Medium' | 'High' | 'Full';
+  }[];
 }
 
 const mockRoutes: Route[] = [
@@ -22,9 +27,9 @@ const mockRoutes: Route[] = [
     direction: 'CP ↔ Dwarka',
     activeBuses: 4,
     nextArrivals: [
-      { stop: 'Connaught Place', time: 3 },
-      { stop: 'Khan Market', time: 12 },
-      { stop: 'Dwarka Sector 21', time: 25, delayed: true },
+      { stop: 'Connaught Place', time: 3, occupancy: 'Medium' },
+      { stop: 'Khan Market', time: 12, occupancy: 'Low' },
+      { stop: 'Dwarka Sector 21', time: 25, delayed: true, occupancy: 'High' },
     ],
   },
   {
@@ -34,8 +39,8 @@ const mockRoutes: Route[] = [
     direction: 'ISBT ↔ Gurgaon',
     activeBuses: 3,
     nextArrivals: [
-      { stop: 'Rajiv Chowk Metro', time: 2 },
-      { stop: 'ISBT Kashmere Gate', time: 18 },
+      { stop: 'Rajiv Chowk Metro', time: 2, occupancy: 'Full' },
+      { stop: 'ISBT Kashmere Gate', time: 18, occupancy: 'Medium' },
     ],
   },
   {
@@ -45,9 +50,9 @@ const mockRoutes: Route[] = [
     direction: 'Khan Market ↔ Lajpat',
     activeBuses: 2,
     nextArrivals: [
-      { stop: 'India Gate', time: 7 },
-      { stop: 'Khan Market', time: 15 },
-      { stop: 'Lajpat Nagar', time: 20, delayed: true },
+      { stop: 'India Gate', time: 7, occupancy: 'Low' },
+      { stop: 'Khan Market', time: 15, occupancy: 'Medium' },
+      { stop: 'Lajpat Nagar', time: 20, delayed: true, occupancy: 'High' },
     ],
   },
   {
@@ -57,9 +62,9 @@ const mockRoutes: Route[] = [
     direction: 'Old Delhi ↔ New Delhi',
     activeBuses: 5,
     nextArrivals: [
-      { stop: 'Red Fort', time: 1 },
-      { stop: 'ISBT Kashmere Gate', time: 8 },
-      { stop: 'India Gate', time: 16 },
+      { stop: 'Red Fort', time: 1, occupancy: 'Medium' },
+      { stop: 'ISBT Kashmere Gate', time: 8, occupancy: 'Low' },
+      { stop: 'India Gate', time: 16, occupancy: 'Full' },
     ],
   },
 ];
@@ -67,6 +72,16 @@ const mockRoutes: Route[] = [
 const RoutePanel = () => {
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const { searchQuery } = useSearch();
+
+  const getOccupancyColor = (occupancy: string) => {
+    switch (occupancy) {
+      case 'Low': return 'text-green-600 bg-green-100 border-green-200';
+      case 'Medium': return 'text-yellow-600 bg-yellow-100 border-yellow-200';
+      case 'High': return 'text-orange-600 bg-orange-100 border-orange-200';
+      case 'Full': return 'text-red-600 bg-red-100 border-red-200';
+      default: return 'text-muted-foreground bg-muted border-border';
+    }
+  };
 
   const filteredRoutes = useMemo(() => {
     if (!searchQuery.trim()) return mockRoutes;
@@ -141,20 +156,30 @@ const RoutePanel = () => {
                     Next Arrivals
                   </h4>
                   {route.nextArrivals.map((arrival, index) => (
-                    <div key={index} className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3 h-3 text-muted-foreground" />
-                        <span className="text-card-foreground">{arrival.stop}</span>
+                    <div key={index} className="space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-3 h-3 text-muted-foreground" />
+                          <span className="text-card-foreground">{arrival.stop}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className={arrival.delayed ? 'text-warning' : 'text-primary'}>
+                            {arrival.time} min
+                          </span>
+                          {arrival.delayed && (
+                            <Badge variant="outline" className="text-xs text-warning border-warning">
+                              Delayed
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span className={arrival.delayed ? 'text-warning' : 'text-primary'}>
-                          {arrival.time} min
-                        </span>
-                        {arrival.delayed && (
-                          <Badge variant="outline" className="text-xs text-warning border-warning">
-                            Delayed
-                          </Badge>
-                        )}
+                      <div className="flex justify-end ml-5">
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs px-2 py-0.5 ${getOccupancyColor(arrival.occupancy)}`}
+                        >
+                          {arrival.occupancy} occupancy
+                        </Badge>
                       </div>
                     </div>
                   ))}
